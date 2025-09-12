@@ -11,7 +11,6 @@ pipeline {
             steps {
                 echo 'Cleaning workspace and fixing permissions...'
                 sh '''
-                    sudo chown -R jenkins:jenkins /var/lib/jenkins/workspace
                     rm -rf Jenkins-Zero-To-Hero/java-maven-sonar-argocd-helm-k8s/spring-boot-app/target
                 '''
             }
