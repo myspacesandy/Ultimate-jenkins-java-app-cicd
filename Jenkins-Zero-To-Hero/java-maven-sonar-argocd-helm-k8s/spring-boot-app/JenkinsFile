@@ -31,12 +31,19 @@ pipeline {
             environment {
                 SONAR_URL = "http://3.94.253.200:9000"
             }
+            agent {
+                docker {
+                    image 'maven:3.8.3-openjdk-17'
+                    args '--user root'
+                }
+            }
             steps {
                 withCredentials([string(credentialsId: 'sonarqube', variable: 'SONAR_AUTH_TOKEN')]) {
                     sh 'cd Jenkins-Zero-To-Hero/java-maven-sonar-argocd-helm-k8s/spring-boot-app && mvn sonar:sonar -Dsonar.login=$SONAR_AUTH_TOKEN -Dsonar.host.url=${SONAR_URL}'
                 }
             }
         }
+
 
         stage('Build and Push Docker Image') {
             steps {
