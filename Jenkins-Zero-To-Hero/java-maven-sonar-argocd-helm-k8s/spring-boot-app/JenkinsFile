@@ -7,7 +7,7 @@ pipeline {
   }
 
   environment {
-    DOCKER_IMAGE = "abhishekf5/ultimate-cicd:${BUILD_NUMBER}"
+    DOCKER_IMAGE = "sandy199/ultimate-cicd:${BUILD_NUMBER}"
     SONAR_URL = "http://3.94.253.200:9000"
   }
 
