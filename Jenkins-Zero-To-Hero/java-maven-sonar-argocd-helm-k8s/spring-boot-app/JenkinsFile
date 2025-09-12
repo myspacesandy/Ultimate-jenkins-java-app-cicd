@@ -30,5 +30,19 @@ pipeline {
         }
       }
     }
+
+    stage('Static Code Analysis') {
+      environment {
+        SONAR_URL = "http://3.94.253.200:9000"
+      }
+      steps {
+        withCredentials([string(credentialsId: 'sonarqube', variable: 'SONAR_AUTH_TOKEN')]) {
+          dir('Jenkins-Zero-To-Hero/java-maven-sonar-argocd-helm-k8s/spring-boot-app') {
+            echo 'Running SonarQube analysis...'
+            sh 'mvn sonar:sonar -Dsonar.login=$SONAR_AUTH_TOKEN -Dsonar.host.url=${SONAR_URL}'
+          }
+        }
+      }
+    }
   }
 }
