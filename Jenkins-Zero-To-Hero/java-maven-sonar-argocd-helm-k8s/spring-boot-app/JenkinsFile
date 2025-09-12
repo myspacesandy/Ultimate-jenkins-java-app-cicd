@@ -13,12 +13,12 @@ pipeline {
 
         stage('Clean Workspace') {
             steps {
-                echo 'Cleaning target folder before starting build...'
-                sh """
-                    sudo chown -R jenkins:jenkins ${APP_DIR}/target || true
-                    sudo chmod -R 777 ${APP_DIR}/target || true
-                    rm -rf ${APP_DIR}/target || true
-                """
+                echo 'Cleaning target folder and fixing permissions...'
+                sh '''
+                    sudo chown -R jenkins:jenkins Jenkins-Zero-To-Hero/java-maven-sonar-argocd-helm-k8s/spring-boot-app/target || true
+                    sudo chmod -R 777 Jenkins-Zero-To-Hero/java-maven-sonar-argocd-helm-k8s/spring-boot-app/target || true
+                    rm -rf Jenkins-Zero-To-Hero/java-maven-sonar-argocd-helm-k8s/spring-boot-app/target
+                '''
             }
         }
 
