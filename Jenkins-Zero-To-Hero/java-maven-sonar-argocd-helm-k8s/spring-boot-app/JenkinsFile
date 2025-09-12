@@ -10,9 +10,6 @@ pipeline {
 
     stage('Clean Workspace') {
         steps {
-            echo 'Fixing target folder ownership...'
-            sh 'sudo chown -R jenkins:jenkins Jenkins-Zero-To-Hero/java-maven-sonar-argocd-helm-k8s/spring-boot-app/target'
-    
             echo 'Cleaning target folder before starting build...'
             sh 'rm -rf Jenkins-Zero-To-Hero/java-maven-sonar-argocd-helm-k8s/spring-boot-app/target'
         }
