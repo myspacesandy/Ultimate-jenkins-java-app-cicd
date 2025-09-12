@@ -14,10 +14,17 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                sh 'echo "Skipping checkout stage..."'
+                checkout([
+                    $class: 'GitSCM',
+                    branches: [[name: '*/main']],
+                    userRemoteConfigs: [[
+                        url: 'https://github.com/myspacesandy/Ultimate-jenkins-java-app-cicd.git',
+                        credentialsId: 'github'
+                    ]],
+                    extensions: [[$class: 'RelativeTargetDirectory', relativeTargetDir: '.']]
+                ])
             }
         }
-
         stage('Clean Workspace') {
             steps {
                 dir('Jenkins-Zero-To-Hero/java-maven-sonar-argocd-helm-k8s/spring-boot-app') {
