@@ -76,6 +76,14 @@ pipeline {
                 GIT_USER_NAME = "myspacesandy"
             }
             steps {
+                checkout([
+                    $class: 'GitSCM',
+                    branches: [[name: '*/main']],
+                    userRemoteConfigs: [[
+                        url: 'https://github.com/myspacesandy/Ultimate-jenkins-java-app-cicd.git',
+                        credentialsId: 'github'
+                    ]]
+                ])
                 withCredentials([string(credentialsId: 'github', variable: 'GITHUB_TOKEN')]) {
                     sh '''
                         git config user.email "sandeepchauhan4681@gmail.com"
