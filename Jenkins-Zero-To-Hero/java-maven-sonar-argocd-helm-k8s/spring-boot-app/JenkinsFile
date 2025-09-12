@@ -72,38 +72,28 @@ pipeline {
 
         stage('Update Deployment File') {
             environment {
-                GIT_REPO_NAME = "Ultimate-jenkins-java-app-cicd"
+                GIT_REPO_NAME = "My-deployemt-file"
                 GIT_USER_NAME = "myspacesandy"
             }
             steps {
-                // Fix permissions from previous docker stages
-                sh '''
-                    echo "Fixing target dir ownership..."
-                    sudo chown -R jenkins:jenkins target || true
-                    rm -rf target || true
-                '''
-
-                // Clean workspace before fresh checkout
-                sh 'rm -rf * || true'
-
-                checkout([
-                    $class: 'GitSCM',
-                    branches: [[name: '*/main']],
-                    userRemoteConfigs: [[
-                        url: 'https://github.com/myspacesandy/Ultimate-jenkins-java-app-cicd.git',
-                        credentialsId: 'github'
-                    ]]
-                ])
-
                 withCredentials([string(credentialsId: 'github', variable: 'GITHUB_TOKEN')]) {
                     sh '''
+                        # Clone the repo fresh into a temporary folder
+                        rm -rf temp-deployment || true
+                        git clone https://${GITHUB_TOKEN}@github.com/${GIT_USER_NAME}/${GIT_REPO_NAME}.git temp-deployment
+
+                        cd temp-deployment
+
+                        # Replace the image tag in deployment.yml
+                        BUILD_NUMBER=${BUILD_NUMBER}
+                        sed -i "s/replaceImageTag/${BUILD_NUMBER}/g" deployment.yml
+
+                        # Commit and push changes
                         git config user.email "sandeepchauhan4681@gmail.com"
                         git config user.name "Sandeep Chauhan"
-                        BUILD_NUMBER=${BUILD_NUMBER}
-                        sed -i "s/replaceImageTag/${BUILD_NUMBER}/g" Jenkins-Zero-To-Hero/java-maven-sonar-argocd-helm-k8s/spring-boot-app-manifests/deployment.yml
-                        git add Jenkins-Zero-To-Hero/java-maven-sonar-argocd-helm-k8s/spring-boot-app-manifests/deployment.yml
+                        git add deployment.yml
                         git commit -m "Update deployment image to version ${BUILD_NUMBER}" || echo "No changes to commit"
-                        git push https://${GITHUB_TOKEN}@github.com/${GIT_USER_NAME}/${GIT_REPO_NAME} HEAD:main
+                        git push origin main
                     '''
                 }
             }
