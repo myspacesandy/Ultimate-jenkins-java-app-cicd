@@ -14,7 +14,11 @@ pipeline {
         stage('Clean Workspace') {
             steps {
                 echo 'Cleaning target folder before starting build...'
-                sh "rm -rf ${APP_DIR}/target"
+                sh """
+                    sudo chown -R jenkins:jenkins ${APP_DIR}/target || true
+                    sudo chmod -R 777 ${APP_DIR}/target || true
+                    rm -rf ${APP_DIR}/target || true
+                """
             }
         }
 
