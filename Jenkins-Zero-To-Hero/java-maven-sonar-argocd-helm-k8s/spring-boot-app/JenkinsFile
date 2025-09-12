@@ -1,7 +1,7 @@
 pipeline {
   agent {
     docker {
-      image 'abhishekf5/maven-abhishek-docker-agent:v1' // docker CLI + maven installed
+      image 'sandy199/maven-docker-openjdk17:latest' // docker CLI + maven installed
       args '--user root -v /var/run/docker.sock:/var/run/docker.sock'
     }
   }
