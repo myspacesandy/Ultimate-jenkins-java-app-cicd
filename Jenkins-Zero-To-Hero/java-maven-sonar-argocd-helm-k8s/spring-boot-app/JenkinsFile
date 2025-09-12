@@ -76,6 +76,16 @@ pipeline {
                 GIT_USER_NAME = "myspacesandy"
             }
             steps {
+                // Fix permissions from previous docker stages
+                sh '''
+                    echo "Fixing target dir ownership..."
+                    sudo chown -R jenkins:jenkins target || true
+                    rm -rf target || true
+                '''
+
+                // Clean workspace before fresh checkout
+                sh 'rm -rf * || true'
+
                 checkout([
                     $class: 'GitSCM',
                     branches: [[name: '*/main']],
@@ -84,6 +94,7 @@ pipeline {
                         credentialsId: 'github'
                     ]]
                 ])
+
                 withCredentials([string(credentialsId: 'github', variable: 'GITHUB_TOKEN')]) {
                     sh '''
                         git config user.email "sandeepchauhan4681@gmail.com"
